@@ -1,4 +1,24 @@
 defmodule Boltun do
+  @moduledoc """
+    Provides macros to define a listener and its callbacks. See the example below
+
+      defmodule TestListener do
+        use Boltun, otp_app: :my_app
+
+        listen do
+          channel "my_channel", :my_callback
+          channel "my_channel", :my_other_callback
+          channel "my_other_channel", :my_other_callback
+        end
+
+        def my_callback(channel, payload) do
+          IO.puts channel
+          IO.puts payload
+        end
+        ...
+      end
+  """
+
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
 
@@ -13,6 +33,9 @@ defmodule Boltun do
     end
   end
 
+  @doc """
+    Defines a callback for the given channel, module, function and arguments. 
+  """
   defmacro channel(channel, module, function, args) do
     quote do
       callback = {unquote(module), unquote(function), unquote(args)}
@@ -21,12 +44,20 @@ defmodule Boltun do
     end
   end
 
+  @doc """
+    Defines a callback for the given channel, function and optional arguments. 
+    The callback must be defined in the same module using this macro.
+  """
   defmacro channel(channel, function, args \\ []) do
     quote do
       channel(unquote(channel), __MODULE__, unquote(function), unquote(args))
     end
   end
 
+  @doc """
+    Defines the listener and its callbacks. Multiple callbacks per channel are supported and they will be invoked in
+    in the order in which they appear in this block
+  """
   defmacro listen(do: source) do
     quote do
       unquote(source)
@@ -41,6 +72,7 @@ defmodule Boltun do
     end  
   end
 
+  @doc false
   def get_config(otp_app, module) do
     if config = Application.get_env(otp_app, module) do
       config
