@@ -3,7 +3,7 @@ defmodule Boltun.Mixfile do
 
   def project do
     [app: :boltun,
-     version: "0.0.1",
+     version: "0.0.2",
      elixir: "~> 1.0",
      deps: deps,
      package: package,
@@ -16,7 +16,7 @@ defmodule Boltun.Mixfile do
   end
 
   defp deps do
-    [{:postgrex, github: "ericmj/postgrex"},
+    [{:postgrex, "~> 0.7"},
      {:earmark, "~> 0.1", only: :docs},
      {:ex_doc, "~> 0.6", only: :docs}]
   end
