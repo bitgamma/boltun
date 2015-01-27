@@ -51,6 +51,11 @@ The listener also needs the connection parameters to establish a connection. You
 
 The full list of options can be read in the documentation for Postgrex.
 
+## TODO
+* Current invocation of Postgrex.Connection.unlisten is actually wrong, it requires a `Reference` but we give the channel name
+* Make test for the dynamic API
+* Improve the dynamic API
+
 ## License
 Copyright (c) 2014, Michele Balistreri <michele@briksoftware.com>
 
