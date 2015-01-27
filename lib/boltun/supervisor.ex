@@ -16,7 +16,7 @@ defmodule Boltun.Supervisor do
     children = [
       worker(Boltun.CallbacksAgent, [Keyword.fetch!(opts, :callbacks), [name: callbacks_agent]]),
       worker(Boltun.Connection, [Keyword.fetch!(opts, :connection), connection]),
-      worker(Boltun.Listener, [[connection: connection, callbacks_agent: callbacks_agent, name: listener]])
+      worker(Boltun.Listener, [[connection: connection, callbacks_agent: callbacks_agent], [name: listener]])
     ]
     supervise(children, strategy: :rest_for_one)
   end

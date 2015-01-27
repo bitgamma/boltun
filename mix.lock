@@ -1,4 +1,4 @@
 %{"decimal": {:hex, :decimal, "1.1.0"},
   "earmark": {:hex, :earmark, "0.1.12"},
   "ex_doc": {:hex, :ex_doc, "0.7.0"},
-  "postgrex": {:git, "git://github.com/ericmj/postgrex.git", "3790d6f8d7bdbb37092564bf347dac7a72321bed", []}}
+  "postgrex": {:hex, :postgrex, "0.7.0"}}

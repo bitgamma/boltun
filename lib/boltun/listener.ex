@@ -1,4 +1,6 @@
 defmodule Boltun.Listener do
+  use GenServer
+
   @moduledoc """
     Listens to Postgrex notifications and invokes the registed callbacks.
   """
@@ -7,33 +9,29 @@ defmodule Boltun.Listener do
     Starts a listener. Expects a keyword list with the following parameters
     * `:connection` => pid or name of the connection to the database
     * `:callbacks_agent` => pid or name of the agent keeping track of the callbacks  
-    * `:name` => the name to register (optional)
+    
+    and a keyword list with GenServer specific options, like `name`.
   """
-  def start_link(opts) do
-    res = {:ok, pid} = Task.start_link(fn -> init(opts) end)
-    register_name(pid, Keyword.get(opts, :name))
-    res
+  def start_link(opts, server_opts) do
+    GenServer.start_link(__MODULE__, opts, server_opts)
   end
 
   @doc "Stops this listener and deregisters all channels"
   def stop(listener) do
-    send listener, :stop
+    GenServer.call(listener, :stop)
   end
 
   @doc "Adds a callback to the given channel"
   def add_callback(listener, channel, {_module, _function, _args} = value) do
-    send listener, {:add_callback, channel, value}
+    GenServer.call(listener, {:add_callback, channel, value})
   end
 
   @doc "Removes all callbacks for the given channel"
   def remove_channel(listener, channel) do
-    send listener, {:remove_channel, channel}
+    GenServer.call(listener, {:remove_channel, channel})
   end
 
-  defp register_name(_pid, nil), do: true
-  defp register_name(pid, name), do: Process.register(pid, name)
-
-  defp init(opts) do
+  def init(opts) do
     conn = Keyword.fetch!(opts, :connection)
     cba = Keyword.fetch!(opts, :callbacks_agent)
     
@@ -41,19 +39,28 @@ defmodule Boltun.Listener do
       register_channel(conn, channel)
     end
 
-    listen(conn, cba)
+    {:ok, %{connection: conn, callbacks_agent: cba}}
   end
 
-  defp listen(conn, cba) do
-    receive do
-      {:notification, _, {:msg_notify, _, channel, payload}} -> execute_callbacks(cba, channel, payload)
-      {:add_callback, channel, value} -> register_callback(conn, cba, channel, value)
-      {:remove_channel, channel} -> deregister_callback(conn, cba, channel)
-      :stop -> die(conn, cba)
-      msg -> raise "Unexpected message #{msg}"
-    end
+  def handle_call(:stop, _from, %{connection: conn, callbacks_agent: cba} = state) do
+    for channel <- Boltun.CallbacksAgent.channels(cba) do
+      deregister_channel(conn, channel)
+    end  
 
-    listen(conn, cba)
+    {:stop, :normal, :ok, state}
+  end
+  def handle_call({:add_callback, channel, value}, _from, %{connection: conn, callbacks_agent: cba} = state) do
+    register_callback(conn, cba, channel, value)
+    {:reply, :ok, state}
+  end
+  def handle_call({:remove_channel, channel}, _from, %{connection: conn, callbacks_agent: cba} = state) do
+    deregister_callback(conn, cba, channel)
+    {:reply, :ok, state}
+  end
+
+  def handle_info({:notification, _, _, channel, payload}, %{callbacks_agent: cba} = state) do
+    execute_callbacks(cba, channel, payload)
+    {:noreply, state}
   end
 
   defp register_callback(conn, cba, channel, value) do
@@ -73,13 +80,5 @@ defmodule Boltun.Listener do
     for {module, function, args} <- Boltun.CallbacksAgent.callbacks_for_channel(cba, channel) do
       apply(module, function, [channel | [payload | args]])
     end
-  end
-
-  defp die(conn, cba) do
-    for channel <- Boltun.CallbacksAgent.channels(cba) do
-      deregister_channel(conn, channel)
-    end  
-
-    Process.exit(self(), :normal)
   end
 end
