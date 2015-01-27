@@ -69,8 +69,8 @@ defmodule Boltun.Listener do
   end
 
   defp deregister_callback(conn, cba, channel) do
-    Boltun.CallbacksAgent.remove_channel(cba, channel)
     deregister_channel(conn, channel)
+    Boltun.CallbacksAgent.remove_channel(cba, channel)
   end
 
   defp register_channel(conn, channel), do: Postgrex.Connection.listen(conn, channel)
