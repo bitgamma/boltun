@@ -29,6 +29,6 @@ defmodule Boltun.CallbacksAgent do
 
   @doc "Removes all callbacks for the given channel"
   def remove_channel(agent, channel) do
-    Agent.get_and_update(agent, &Dict.delete(&1, channel))
+    Agent.update(agent, &Dict.delete(&1, channel))
   end
 end
