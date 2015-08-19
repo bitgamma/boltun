@@ -21,7 +21,7 @@ Defining a listener is trivial. See the example below
 ```elixir
 defmodule TestListener do
   use Boltun, otp_app: :my_app
-  
+
   listen do
     channel "my_channel", :my_callback
     channel "my_channel", :my_other_callback
@@ -52,7 +52,7 @@ The listener also needs the connection parameters to establish a connection. You
 The full list of options can be read in the documentation for Postgrex.
 
 ## License
-Copyright (c) 2014, Michele Balistreri <michele@briksoftware.com>
+Copyright (c) 2014, Bitgamma OÜ <michele@briksoftware.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above

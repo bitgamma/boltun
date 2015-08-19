@@ -3,7 +3,7 @@ defmodule Boltun.Mixfile do
 
   def project do
     [app: :boltun,
-     version: "0.0.4",
+     version: "0.1.0-dev",
      elixir: "~> 1.0",
      deps: deps,
      package: package,
@@ -28,6 +28,6 @@ defmodule Boltun.Mixfile do
   defp package do
     [contributors: ["Michele Balistreri"],
      licenses: ["ISC"],
-     links: %{"GitHub" => "https://github.com/briksoftware/boltun"}]
+     links: %{"GitHub" => "https://github.com/bitgamma/boltun"}]
   end
 end
