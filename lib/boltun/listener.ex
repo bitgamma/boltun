@@ -69,7 +69,7 @@ defmodule Boltun.Listener do
 
   defp register_channel(%{connection: conn, listeners: refs} = state, channel) do
     if not Map.has_key?(refs, channel) do
-      {:ok, ref} = Postgrex.Connection.listen(conn, channel)
+      {:ok, ref} = Postgrex.Notifications.listen(conn, channel)
       refs = Map.put(refs, channel, ref)
       %{ state | listeners: refs}
     else
@@ -79,7 +79,7 @@ defmodule Boltun.Listener do
 
   defp deregister_channel(%{connection: conn, listeners: refs} = state, channel) do
     {ref, refs} = Map.pop(refs, channel)
-    Postgrex.Connection.unlisten(conn, ref)
+    Postgrex.Notifications.unlisten(conn, ref)
     %{ state | listeners: refs}
   end
 
