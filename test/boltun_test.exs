@@ -11,15 +11,15 @@ defmodule Boltun.TestListener do
 
   def test("other_channel", id) do
     send BoltunTest, {:test_other_channel, id}
-  end   
+  end
 
   def other_test("test_channel", id) do
     send BoltunTest, {:other_test_channel, id}
-  end   
+  end
 
   def other_test("other_channel", id) do
     send BoltunTest, {:other_other_channel, id}
-  end  
+  end
 end
 
 defmodule BoltunTest do
