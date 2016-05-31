@@ -7,8 +7,7 @@ defmodule Boltun.Mixfile do
      elixir: "~> 1.0",
      deps: deps,
      package: package,
-     description: description,
-     docs: [readme: "README.md", main: "README"]]
+     description: description]
   end
 
   def application do
@@ -16,9 +15,9 @@ defmodule Boltun.Mixfile do
   end
 
   defp deps do
-    [{:postgrex, ">= 0.7.0"},
-     {:earmark, "~> 0.1", only: :docs},
-     {:ex_doc, "~> 0.6", only: :docs}]
+    [{:postgrex, ">= 0.11.0"},
+    {:earmark, "~> 0.2", only: :dev},
+    {:ex_doc, "~> 0.11", only: :dev}]
   end
 
   defp description do
@@ -26,7 +25,7 @@ defmodule Boltun.Mixfile do
   end
 
   defp package do
-    [contributors: ["Michele Balistreri"],
+    [maintainers: ["Michele Balistreri"],
      licenses: ["ISC"],
      links: %{"GitHub" => "https://github.com/bitgamma/boltun"}]
   end

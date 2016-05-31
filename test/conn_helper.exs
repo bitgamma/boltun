@@ -4,7 +4,7 @@ defmodule ConnHelper do
   end
 
   def notify(channel, payload) do
-    conn = start_connection
+    conn = start_connection()
     Postgrex.query(conn, "NOTIFY #{channel}, '#{payload}'", [])
   end
 end
