@@ -3,7 +3,7 @@ defmodule Boltun.Mixfile do
 
   def project do
     [app: :boltun,
-     version: "0.1.0-dev",
+     version: "0.1.1-dev",
      elixir: "~> 1.0",
      deps: deps,
      package: package,
