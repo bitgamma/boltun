@@ -14,7 +14,7 @@ defmodule Boltun.Supervisor do
   * `Listener` the actual listener. You can use this to manage active callbacks
   """
   def start_link(opts) do
-    Supervisor.start_link(__MODULE__, opts)
+    Supervisor.start_link(__MODULE__, opts, name: Keyword.fetch!(opts, :name))
   end
 
   @doc false
