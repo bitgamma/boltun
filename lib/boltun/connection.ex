@@ -3,7 +3,7 @@ defmodule Boltun.Connection do
 
   @doc false
   def start_link(opts, name) do
-    res = {:ok, pid} = Postgrex.Connection.start_link(opts)
+    res = {:ok, pid} = Postgrex.Notifications.start_link(opts)
     Process.register pid, name
     res
   end
