@@ -5,7 +5,7 @@ defmodule Boltun.Supervisor do
   Starts the Boltun supervision tree. The options are:
   * `connection`: the connection parameters
   * `name`: the base name to register the process.
-  * `callbacks': the initial callbacks (optional)
+  * `callbacks`: the initial callbacks (optional)
 
   The supervisor will register each started process by using the provided name and concatenating
   a dot and the following suffixes:
@@ -14,7 +14,7 @@ defmodule Boltun.Supervisor do
   * `Listener` the actual listener. You can use this to manage active callbacks
   """
   def start_link(opts) do
-    Supervisor.start_link(__MODULE__, opts)
+    Supervisor.start_link(__MODULE__, opts, name: Keyword.fetch!(opts, :name))
   end
 
   @doc false

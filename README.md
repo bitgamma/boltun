@@ -8,7 +8,7 @@ Add Boltun as a dependency in your `mix.exs` file.
 
 ```elixir
 defp deps do
-  [{:boltun, "~> 0.0.1"}]
+  [{:boltun, "~> 1.0.1"}]
 end
 ```
 
