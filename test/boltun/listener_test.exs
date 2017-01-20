@@ -3,7 +3,7 @@ defmodule Boltun.ListenerTest do
   import ConnHelper
 
   test "add callbacks" do
-    Process.register(self, BoltunTest)
+    Process.register(self(), BoltunTest)
     {:ok, sup} = Boltun.Supervisor.start_link([connection: Application.get_env(:boltun, Boltun.TestListener), name: Boltun.TestListener])
 
     Boltun.Listener.add_callback(Boltun.TestListener.Listener, "test_channel", {Boltun.TestListener, :test, []})
@@ -16,7 +16,7 @@ defmodule Boltun.ListenerTest do
   end
 
   test "add multiple callbacks" do
-    Process.register(self, BoltunTest)
+    Process.register(self(), BoltunTest)
     {:ok, sup} = Boltun.Supervisor.start_link([connection: Application.get_env(:boltun, Boltun.TestListener), name: Boltun.TestListener])
 
     Boltun.Listener.add_callback(Boltun.TestListener.Listener, "test_channel", {Boltun.TestListener, :test, []})
@@ -40,7 +40,7 @@ defmodule Boltun.ListenerTest do
   end
 
   test "remove callbacks" do
-    Process.register(self, BoltunTest)
+    Process.register(self(), BoltunTest)
     {:ok, sup} = Boltun.Supervisor.start_link([connection: Application.get_env(:boltun, Boltun.TestListener), name: Boltun.TestListener])
 
     Boltun.Listener.add_callback(Boltun.TestListener.Listener, "test_channel", {Boltun.TestListener, :test, []})

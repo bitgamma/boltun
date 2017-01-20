@@ -6,29 +6,29 @@ defmodule Boltun.CallbacksAgent do
 
   @doc "Starts the callback agent"
   def start_link(initial_callbacks, opts) do
-    Agent.start_link(fn -> Enum.into(initial_callbacks, HashDict.new) end, opts)
+    Agent.start_link(fn -> Enum.into(initial_callbacks, Map.new) end, opts)
   end
 
   @doc "Returns the list of channels to monitor"
   def channels(agent) do
-    Agent.get(agent, &Dict.keys(&1))    
+    Agent.get(agent, &Map.keys(&1))
   end
 
   @doc "Returns all callbacks for the given channel"
   def callbacks_for_channel(agent, channel) do
-    Agent.get(agent, &Dict.get(&1, channel))
+    Agent.get(agent, &Map.get(&1, channel))
   end
 
   @doc "Adds a callback for the given channel"
   def add_to_channel(agent, channel, {_module, _function, _args} = value) do
-    Agent.update(agent, fn callbacks -> 
-      channel_cbs = Dict.get(callbacks, channel, []) ++ [value]
+    Agent.update(agent, fn callbacks ->
+      channel_cbs = Map.get(callbacks, channel, []) ++ [value]
       Dict.put(callbacks, channel, channel_cbs)
     end)
   end
 
   @doc "Removes all callbacks for the given channel"
   def remove_channel(agent, channel) do
-    Agent.update(agent, &Dict.delete(&1, channel))
+    Agent.update(agent, &Map.delete(&1, channel))
   end
 end

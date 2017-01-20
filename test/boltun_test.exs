@@ -27,7 +27,7 @@ defmodule BoltunTest do
   import ConnHelper
 
   test "listens to notifications" do
-    Process.register(self, BoltunTest)
+    Process.register(self(), BoltunTest)
     Boltun.TestListener.start_link
 
     notify("test_channel", "test")

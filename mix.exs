@@ -5,9 +5,9 @@ defmodule Boltun.Mixfile do
     [app: :boltun,
      version: "1.0.1",
      elixir: "~> 1.0",
-     deps: deps,
-     package: package,
-     description: description]
+     deps: deps(),
+     package: package(),
+     description: description()]
   end
 
   def application do
