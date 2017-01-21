@@ -34,18 +34,18 @@ defmodule Boltun do
   end
 
   @doc """
-    Defines a callback for the given channel, module, function and arguments. 
+    Defines a callback for the given channel, module, function and arguments.
   """
   defmacro channel(channel, module, function, args) do
     quote do
       callback = {unquote(module), unquote(function), unquote(args)}
-      channel_cbs = Dict.get(@registered_callbacks, unquote(channel), []) ++ [callback]
-      Module.put_attribute(__MODULE__, :registered_callbacks, Dict.put(@registered_callbacks, unquote(channel), channel_cbs))
+      channel_cbs = Map.get(@registered_callbacks, unquote(channel), []) ++ [callback]
+      Module.put_attribute(__MODULE__, :registered_callbacks, Map.put(@registered_callbacks, unquote(channel), channel_cbs))
     end
   end
 
   @doc """
-    Defines a callback for the given channel, function and optional arguments. 
+    Defines a callback for the given channel, function and optional arguments.
     The callback must be defined in the same module using this macro.
   """
   defmacro channel(channel, function, args \\ []) do
@@ -63,13 +63,13 @@ defmodule Boltun do
       unquote(source)
 
       def start_link do
-        opts = [ 
+        opts = [
           connection: config(),
           callbacks: @registered_callbacks, name: __MODULE__
         ]
         Boltun.Supervisor.start_link(opts)
-      end 
-    end  
+      end
+    end
   end
 
   @doc false
