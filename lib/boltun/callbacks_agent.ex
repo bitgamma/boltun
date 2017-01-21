@@ -23,7 +23,7 @@ defmodule Boltun.CallbacksAgent do
   def add_to_channel(agent, channel, {_module, _function, _args} = value) do
     Agent.update(agent, fn callbacks ->
       channel_cbs = Map.get(callbacks, channel, []) ++ [value]
-      Dict.put(callbacks, channel, channel_cbs)
+      Map.put(callbacks, channel, channel_cbs)
     end)
   end
 
