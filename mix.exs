@@ -15,9 +15,9 @@ defmodule Boltun.Mixfile do
   end
 
   defp deps do
-    [{:postgrex, ">= 0.11.0"},
-    {:earmark, "~> 0.2", only: :dev},
-    {:ex_doc, "~> 0.11", only: :dev}]
+    [{:postgrex, "~> 0.13"},
+    {:earmark, "~> 1.2", only: :dev},
+    {:ex_doc, "~> 0.16", only: :dev}]
   end
 
   defp description do
