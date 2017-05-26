@@ -1,5 +1,7 @@
 # Boltun
 
+[![Build Status](https://travis-ci.org/bitgamma/boltun.svg?branch=master)](https://travis-ci.org/bitgamma/boltun)
+
 Boltun simplifies handling of the LISTEN/NOTIFY mechanism offered by Postgres. Basically you will just need to define which callback(s) should be called on a specific notification and that's it
 
 ## Usage
