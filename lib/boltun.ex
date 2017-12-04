@@ -20,17 +20,29 @@ defmodule Boltun do
   """
 
   defmacro __using__(opts) do
-    otp_app = Keyword.fetch!(opts, :otp_app)
-
-    quote do
-      import Boltun, only: [channel: 2, channel: 3, channel: 4, listen: 1]
-      Module.register_attribute(__MODULE__, :registered_callbacks, [])
-      Module.put_attribute(__MODULE__, :registered_callbacks, %{})
-
-      def config() do
-        Boltun.get_config(unquote(otp_app), __MODULE__)
+    headers =
+      quote do
+        import Boltun, only: [channel: 2, channel: 3, channel: 4, listen: 1]
+        Module.register_attribute(__MODULE__, :registered_callbacks, [])
+        Module.put_attribute(__MODULE__, :registered_callbacks, %{})
       end
-    end
+
+    config =
+      case opts do
+        [config: config_fn] ->
+          quote do
+            def config(), do: unquote(config_fn).()
+          end
+        _ ->
+          otp_app = Keyword.fetch!(opts, :otp_app)
+          quote do
+            def config() do
+              Boltun.get_config(unquote(otp_app), __MODULE__)
+            end
+          end
+      end
+
+    [headers, config]
   end
 
   @doc """
