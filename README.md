@@ -40,16 +40,39 @@ end
 
 The channel is a concept defined by Postgres. On the SQL side you will have something like `NOTIFY my_channel, 'my payload'` happening, for example, in a trigger which will cause your callbacks TestListener.my_callback and TestListener.my_other_callback to be called. The callbacks will be invoked synchronously in the order they were declared in the listen block.
 
-## Using a listener
+### Configuration
 
-Defining a listener is not enough to use it. It should be started with `TestListener.start_link`. You can do this, for example, in a supervisor.
 The listener also needs the connection parameters to establish a connection. You will provide this in your config.exs file in this format
 
 ```elixir
-  ...
-  config :my_app, TestListener, database: "postgres", username: "postgres", password: "postgres", hostname: "localhost"
-  ...
+  config :my_app, TestListener,
+    database: "postgres",
+    username: "postgres",
+    password: "postgres",
+    hostname: "localhost"
 ```
+
+### Alternate Configuration
+
+Occasionally, one might want more explicit control over the configuration.
+This is especially the case when using `Ecto`, and the configuration is already provided.
+
+Passing a zero-arity function as the `:config` option will allow one to customize or delegate configuration.
+This function must return a keyword list of all connection parameters required by Postgrex to establish a connection.
+
+```elixir
+defmodule TestListener do
+  use Boltun, config: &MyApp.Repo.config/0
+
+  ...
+end
+```
+
+> Note: defining `otp_app: :my_app` is not required with function based configuration.
+
+## Using a listener
+
+Defining a listener is not enough to use it. It should be started with `TestListener.start_link`. You can do this, for example, in a supervisor.
 
 The full list of options can be read in the documentation for Postgrex.
 
