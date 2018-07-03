@@ -75,9 +75,30 @@ defmodule Boltun do
   @doc false
   def get_config(otp_app, module) do
     if config = Application.get_env(otp_app, module) do
-      config
+      parse_ecto_config(config)
     else
       raise ArgumentError, "configuration for #{inspect module} not specified in #{inspect otp_app}"
     end
+  end
+
+  @doc """
+    Parses ecto config to regular config
+  """
+  def parse_ecto_config(ecto: ecto_url) when is_binary(ecto_url) do
+    case Regex.run(~r/ecto:\/\/(.+):(.+)@(.+)\/(.+)$/, ecto_url) do
+      [_, username, password, hostname, database] ->
+        [
+          database: database,
+          username: username,
+          password: password,
+          hostname: hostname
+        ]
+      _ ->
+        nil
+    end
+  end
+  
+  def parse_ecto_config(config) do
+    config
   end
 end
